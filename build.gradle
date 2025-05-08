@@ -1,0 +1,16 @@
+apply plugin: 'java'
+
+group = 'com.github.bumerania'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // No dependencies
+}
+
+artifacts {
+    archives file('libs/robotservice.jar')
+}
