@@ -1,16 +1,43 @@
-apply plugin: 'java'
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
 
 group = 'com.github.bumerania'
 version = '1.0.0'
 
 repositories {
     mavenCentral()
+    google()
 }
 
-dependencies {
-    // No dependencies
+task extractJar(type: Copy) {
+    from zipTree('libs/robotservice.jar')
+    into "$buildDir/extracted-jar"
 }
 
-artifacts {
-    archives file('libs/robotservice.jar')
+compileJava.dependsOn extractJar
+
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/extracted-jar"
+        resources.srcDirs += "$buildDir/extracted-jar"
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            
+            artifact('libs/robotservice.jar') {
+                classifier = 'all'
+            }
+        }
+    }
 }
